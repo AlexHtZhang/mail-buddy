@@ -25,6 +25,7 @@ SECRET_KEY = '78k@-oc^#)g(#=)%uij#77ky)e4kp$o4x#*(z2&s=+5a2+mq-q'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# [] means no other browser than the local can access this server.
 ALLOWED_HOSTS = []
 
 
@@ -49,12 +50,15 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# receive url request, where to solve it.
 ROOT_URLCONF = 'weather.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates', 'reminder'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -74,11 +78,16 @@ WSGI_APPLICATION = 'weather.wsgi.application'
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+   'default': {
+       'ENGINE': 'django.db.backends.mysql',
+       'NAME': 'weather',
+       'USER': 'root',
+       'PASSWORD': 'root',
+       'HOST': '127.0.0.1',
+       'PORT': '3306',
+   }
 }
+
 
 
 # Password validation
