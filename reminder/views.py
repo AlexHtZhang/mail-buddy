@@ -10,6 +10,7 @@ from django.contrib import auth
 from django.core.mail import EmailMessage
 from models import Reminder
 from forms import AddReminderForm
+from api_key import API_KEY
 
 def manage(request):
    user_id = None
@@ -41,11 +42,9 @@ def del_reminder(request):
 
 # api.openweathermap.org/data/2.5/weather?q=London,uk&APPID=0d349e111795a977719e4009138fd64a
 def get_weather(zipcode):
-    appid = '0d349e111795a977719e4009138fd64a'  # replace with your own API key
+    appid = API_KEY  # openweather free api key
     baseurl = 'http://api.openweathermap.org/data/2.5/forecast?zip=%s,us&appid=%s&units=imperial&cnt=2'
-    print zipcode, appid
     actual_url = baseurl % (zipcode, appid)
-    print actual_url
     data = dict()
     try:
         result = urllib2.urlopen(actual_url).read()
@@ -75,18 +74,20 @@ def test_email(request):
       return HttpResponseRedirect("/accounts/login/")
   reminders = Reminder.objects.filter(user_id=user_id)
   # De-duplicate zipcode.
+  # fetch weather data for unique zipcodes and fetch.
+  # 1billion user, at most fetch all possible zipcodes.
   zipcodes = set()
   for reminder in reminders:
       zipcodes.add(reminder.zipcode)
   body = "Dear %s,\n\n" % request.user.username
   for zipcode in zipcodes:
       body += generate_weather_string(get_weather(zipcode)) + "\n"
-  body += "\nBest,\nWeather Reminder"
-  message = EmailMessage("Weather Report", body, to=[request.user.email])
+  body += "\nBest,\nMailBuddyService Team"
+  message = EmailMessage("MailBuddyService Weather Report", body, to=[request.user.email])
   message.send()
   return HttpResponseRedirect("/")
 
-
+# don't save the weather info in database, fetch them from openweather on demend.
 def secret_trigger(request):
   reminders = Reminder.objects.all()
   zip_reminders_map = defaultdict(list)
@@ -110,6 +111,7 @@ def secret_trigger(request):
           body += emails[(user_id, email)][zipcode] + "\n"
       body += "\n Best,\nWeather Reminder"
       message = EmailMessage("Weather Reminder", body, to=[email])
+      # sent the reminder email one by one.
       message.send()
       response['emails_sent'].append(email)
   return HttpResponse(json.dumps(response))
@@ -132,13 +134,13 @@ def generate_warnings(data):
                Reminder.RAIN] = warning_text + " It will be raining tomorrow, please remember to take your umbrella."
        if tomorrow_weather['weather'][0]['id'] in SNOW_CODES:
            warnings[Reminder.SNOW] = warning_text + " It will be snowing tomorrow, please drive carefully."
-       if (float(tomorrow_weather['temp']['min']) - float(today_weather['temp']['min']) <= -3 or
-                       float(tomorrow_weather['temp']['max']) - float(today_weather['temp']['max']) <= -3):
+       if (float(tomorrow_weather['main']['temp_min']) - float(today_weather['main']['temp_min']) <= -5 or
+                       float(tomorrow_weather['main']['temp_max']) - float(today_weather['main']['temp_max']) <= -5):
            warnings[
-               Reminder.TEMPDROP3F] = warning_text + " The temperature will drop by more than 3 F, please wear warmer clothes."
-       if (float(tomorrow_weather['temp']['min']) - float(today_weather['temp']['min']) >= 3 or
-                       float(tomorrow_weather['temp']['max']) - float(today_weather['temp']['max']) >= 3):
-           warnings[Reminder.TEMPRISE3F] = warning_text + " The temperature will rise by more than 3 F."
+               Reminder.TEMPDROP3F] = warning_text + " The temperature will drop by more than 5 F, please wear warmer clothes."
+       if (float(tomorrow_weather['temp']['min']) - float(today_weather['temp']['min']) >= 5 or
+                       float(tomorrow_weather['temp']['max']) - float(today_weather['temp']['max']) >= 5):
+           warnings[Reminder.TEMPRISE3F] = warning_text + " The temperature will rise by more than 5 F."
    except:
        print(traceback.format_exc())
    return warnings

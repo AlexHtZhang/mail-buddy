@@ -4,7 +4,7 @@
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
    <meta http-equiv="x-ua-compatible" content="ie=edge">
-   <meta name="author" content="David Chen">
+   <meta name="author" content="AlexHtZhang">
    <title>{% block head_title %}Default title{% endblock %}</title>
    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
    {% block extra_head %}{% endblock %}
@@ -20,17 +20,16 @@
                <span class="icon-bar"></span>
                <span class="icon-bar"></span>
            </button>
-           <a class="navbar-brand" href="/">WeatherReminder</a>
+           <a class="navbar-brand" href="/">MailBuddyService</a>
        </div>
        <div id="navbar" class="navbar-collapse collapse">
            <ul class="nav navbar-nav">
                <li class="active"><a href="#">Home</a></li>
                <li><a href="#about">About</a></li>
-               <li><a href="#contact">Contact</a></li>
            </ul>
            {% if logged_in %}{% load account %}
           <ul class="navbar-form navbar-right">
-              <li><a class="btn btn-danger" href="/accounts/logout/">Sign Out</a></li>
+              <li><a class="btn btn-danger" href="/accounts/logout/">Logout</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
               <li><a>Welcome, {% user_display user %}</a></li>
@@ -49,13 +48,12 @@
        <div class="pull-left">
            <span>
                <span class="glyphicon glyphicon-user"></span> Developed by
-               <a href="http://www.laioffer.com/">Laioffer Inc.</a>
+               <a href="https://github.com/AlexHtZhang">AlexHtZhang.</a>
            </span>
        </div>
        <div class="pull-right">
            <span>
-               Powered by <a href="https://www.djangoproject.com/">Django</a> +
-               <a href="http://getbootstrap.com/">Bootstrap</a>
+               Powered by <a href="https://openweathermap.org/">OpenWeatherMap</a>
            </span>
        </div>
    </div>

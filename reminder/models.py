@@ -17,11 +17,11 @@ class Reminder(models.Model):
    TEMPRISE3F = 4
    MAX_CHOICES = 5
    WARNING_TEXT = [
-       'Always',
+       'Sent weather Info everyday',
        'Raining tomorrow',
        'Snowing tomorrow',
-       'Temperature dropping by 3F tomorrow',
-       'Temperature rising by 3F tomorrow',
+       'Temperature dropping by 5F tomorrow',
+       'Temperature rising by 5F tomorrow',
    ]
    WARNING_CHOICE = [(i, WARNING_TEXT[i]) for i in range(MAX_CHOICES)]
    # django will process it in the sql table.
