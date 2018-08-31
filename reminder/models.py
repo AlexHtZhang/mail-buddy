@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from datetime import datetime
 
 # Create your models here.
+# Reminder inhereit from models.Model
 class Reminder(models.Model):
    ALWAYS = 0
    RAIN = 1
@@ -23,6 +24,7 @@ class Reminder(models.Model):
        'Temperature rising by 3F tomorrow',
    ]
    WARNING_CHOICE = [(i, WARNING_TEXT[i]) for i in range(MAX_CHOICES)]
+   # django will process it in the sql table.
    user = models.ForeignKey(User)
    zipcode = models.CharField(max_length=30)
    warning_event = models.IntegerField(default=0, choices=WARNING_CHOICE)
